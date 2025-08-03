@@ -33,6 +33,9 @@ namespace SR.ModRimWorld.RaidExtension
         /// <returns></returns>
         protected override bool CanFireNowSub(IncidentParms parms)
         {
+            if( !base.CanFireNowSub( parms ))
+                return false;
+
             if (!(parms.target is Map map))
             {
                 Log.Error($"{MiscDef.LogTag}target must be a map.");
