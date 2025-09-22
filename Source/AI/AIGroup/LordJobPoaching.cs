@@ -118,10 +118,10 @@ namespace SR.ModRimWorld.RaidExtension
             if( Find.TickManager.TicksGame % CheckEveryTicks != 0 )
                 return false;
 
-            if( !TargetAnimal.Dead )
+            if( TargetAnimal == null || lord.ownedPawns == null || lord.ownedPawns.Count <= 0 )
                 return false;
 
-            if( lord.ownedPawns == null || lord.ownedPawns.Count <= 0 )
+            if( !TargetAnimal.Dead )
                 return false;
 
             // Check for any similar animals in a radius around the original one.
