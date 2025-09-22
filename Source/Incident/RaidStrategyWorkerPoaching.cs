@@ -82,7 +82,22 @@ namespace SR.ModRimWorld.RaidExtension
             {
                 return false;
             }
+            if( !HasReasonableShooting( p ))
+                return false;
             return true;
+        }
+
+        // Pretty much SappersUtility.CanMineReasonablyFast().
+        private bool HasReasonableShooting(Pawn p)
+        {
+            if (p.RaceProps.Humanlike && !p.skills.GetSkill(SkillDefOf.Shooting).TotallyDisabled && !StatDefOf.ShootingAccuracyPawn.Worker.IsDisabledFor(p))
+            {
+                // At most 7% accuracy loss per cell, which is still rather a poor accuracy (healthy baseliner with shooting skill of 2),
+                // but somewhat difficult to achieve e.g. for neandearthals, so filter out at least
+                // the awful shots.
+                return p.GetStatValue(StatDefOf.ShootingAccuracyPawn) > 0.93f;
+            }
+            return false;
         }
 
         // HACK: Some things related to the incident need to be done late, finding the animal needs
