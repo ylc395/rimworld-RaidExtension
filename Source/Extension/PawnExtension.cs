@@ -55,8 +55,12 @@ namespace SR.ModRimWorld.RaidExtension
         public static Thing FindTree(this Pawn pawn)
         {
             //验证器 是植物 可以保留 没有燃烧中 角色不是什么树木爱好者 成熟了
+            //敌方袭击者的 WorkSettings 可能未初始化，PawnWillingToCutPlant_Job 及其 Harmony 补丁
+            //（如 CutPlantsBeforeBuilding）会访问 WorkSettings 导致报错，需要做防御性检查
+            bool PawnWillingToCut(Thing t) => !pawn.WorkSettingsIsEnabled
+                || PlantUtility.PawnWillingToCutPlant_Job(t, pawn);
             bool SpoilValidatorAny(Thing t) => ThingValidator.IsTree(t) && pawn.CanReserve(t)
-                                            && PlantUtility.PawnWillingToCutPlant_Job(t, pawn);
+                                            && PawnWillingToCut(t);
             bool SpoilValidatorNotColony(Thing t) => SpoilValidatorAny(t)
                 && t.Faction != Faction.OfPlayer && !t.Map.areaManager.Home[ t.Position ];
 
